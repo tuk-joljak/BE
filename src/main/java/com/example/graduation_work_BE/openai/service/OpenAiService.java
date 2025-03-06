@@ -1,64 +1,47 @@
 package com.example.graduation_work_BE.openai.service;
 
-import com.example.graduation_work_BE.openai.DTO.OpenAiResponseDTO;
-import com.example.graduation_work_BE.openai.config.OpenAiConfig;
+import com.example.graduation_work_BE.openai.entity.DTO.OpenAiResponseDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OpenAiService {
 
     private final WebClient webClient;
-    private final OpenAiConfig openAiConfig;
+    private final String apiKey = "your-openai-api-key";
+    private final String model = "gpt-4";
 
-    public OpenAiService(WebClient.Builder webClientBuilder, OpenAiConfig openAiConfig) {
-        this.webClient = webClientBuilder.baseUrl("https://api.openai.com/v1").build();
-        this.openAiConfig = openAiConfig;
-    }
+    public Mono<OpenAiResponseDTO> suggestSkillsImprovement(List<String> missingSkills) {
+        String prompt = """
+            아래는 사용자가 부족한 기술 목록입니다.
+            해당 기술들을 학습하고 보완하는 방법을 설명해 주세요.
+            
+            📌 부족한 기술:
+            %s
 
-    // ✅ getCompletion() 메서드를 messages 기반으로 수정
-    public Mono<OpenAiResponseDTO> getCompletion(List<Map<String, String>> messages) {
-        log.info("📌 OpenAiService - OpenAI API 호출 시작!");
-        log.info("📌 사용 API 키: {}", openAiConfig.getApiKey());
+            ✅ 학습 방법과 추천 자료를 제공해 주세요.
+            """.formatted(String.join(", ", missingSkills));
 
         return webClient.post()
-                .uri("/chat/completions")
-                .header("Authorization", "Bearer " + openAiConfig.getApiKey())  // API 키 추가
+                .uri("https://api.openai.com/v1/chat/completions")
+                .header("Authorization", "Bearer " + apiKey)
                 .header("Content-Type", "application/json")
                 .bodyValue(Map.of(
-                        "model", openAiConfig.getModel(),
-                        "messages", messages,  // ✅ prompt 대신 messages 전체 전달
-                        "temperature", openAiConfig.getTemperature(),
-                        "max_tokens", openAiConfig.getMaxTokens()
+                        "model", model,
+                        "messages", List.of(Map.of("role", "user", "content", prompt)),
+                        "temperature", 0.7,
+                        "max_tokens", 300
                 ))
                 .retrieve()
                 .bodyToMono(Map.class)
-                .map(response -> {
-                    log.info("📌 OpenAiService - OpenAI API 응답: {}", response);
-
-                    List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
-                    if (choices == null || choices.isEmpty()) {
-                        throw new RuntimeException("No choices found in OpenAI response");
-                    }
-
-                    Map<String, Object> firstChoice = choices.get(0);
-                    Map<String, Object> message = (Map<String, Object>) firstChoice.get("message");
-                    if (message == null) {
-                        throw new RuntimeException("No message found in OpenAI response");
-                    }
-
-                    String content = (String) message.get("content");
-                    if (content == null) {
-                        throw new RuntimeException("No content found in OpenAI response");
-                    }
-
-                    return new OpenAiResponseDTO(content);
-                });
+                .map(response -> new OpenAiResponseDTO((List<String>) response.get("choices")));
     }
 }

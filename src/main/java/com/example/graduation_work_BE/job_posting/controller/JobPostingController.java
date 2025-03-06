@@ -1,15 +1,14 @@
 package com.example.graduation_work_BE.job_posting.controller;
 
 import com.example.graduation_work_BE.job_posting.domain.DTO.ResponseJobPostingGetDTO;
+import com.example.graduation_work_BE.job_posting.domain.DTO.RequestJobPostingSaveDTO;
 import com.example.graduation_work_BE.job_posting.domain.DTO.ResponseJobPostingsGetDTO;
+import com.example.graduation_work_BE.job_posting.service.CompanyService;
 import com.example.graduation_work_BE.job_posting.service.JobPostingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -18,10 +17,12 @@ import java.util.*;
 public class JobPostingController {
 
     JobPostingService jobPostingService;
+    CompanyService companyService;
 
     @Autowired
-    public JobPostingController(JobPostingService jobPostingService){
+    public JobPostingController(JobPostingService jobPostingService, CompanyService companyService){
         this.jobPostingService = jobPostingService;
+        this.companyService = companyService;
     }
 
     // 공고 전체 조회
@@ -58,4 +59,17 @@ public class JobPostingController {
 
     }
 
+    // 크롤링한 공고 저장
+    // ✅ 채용 공고 저장
+    @PostMapping
+    public ResponseEntity<?> saveJobPosting(@RequestBody RequestJobPostingSaveDTO dto) {
+        // ✅ companyId 조회 및 자동 생성
+        UUID companyId = companyService.getOrCreateCompanyId(dto.getCompanyName());
+
+        // ✅ DTO에 companyId 추가
+        dto.setCompanyId(companyId);
+
+        jobPostingService.saveJobPosting(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

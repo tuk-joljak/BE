@@ -1,12 +1,13 @@
-package com.example.graduation_work_BE.openai.DTO;
+package com.example.graduation_work_BE.openai.entity.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class OpenAiResponseDTO {
-    private String response;
+    private List<String> responses;
 }

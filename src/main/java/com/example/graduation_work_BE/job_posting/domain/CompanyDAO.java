@@ -1,7 +1,6 @@
 package com.example.graduation_work_BE.job_posting.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,11 +16,21 @@ public class CompanyDAO {
     @Id
     UUID companyId;
 
+    @Column(unique = true)
     String companyName;
+
     String companyDescription;
 
+    @Enumerated(EnumType.STRING)
     CompanyCategory companyCategory;
 
     LocalDateTime createAt;
     LocalDateTime updateAt;
+
+    @PrePersist
+    public void prePersist(){
+        if (this.companyId == null){
+            this.companyId = UUID.randomUUID();
+        }
+    }
 }
