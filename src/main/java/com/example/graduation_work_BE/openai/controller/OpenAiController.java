@@ -1,9 +1,9 @@
 package com.example.graduation_work_BE.openai.controller;
 
-import com.example.graduation_work_BE.job_posting.domain.JobPostingDAO;
+import com.example.graduation_work_BE.openai.entity.DTO.OpenAiResponseDTO;
 import com.example.graduation_work_BE.openai.service.OpenAiService;
+import com.example.graduation_work_BE.job_posting.domain.JobPostingDAO;
 import com.example.graduation_work_BE.job_posting.service.JobPostingService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/openai")
+@RequestMapping("/openai")
 @RequiredArgsConstructor
 @Slf4j
 public class OpenAiController {
@@ -27,13 +27,23 @@ public class OpenAiController {
     private final OpenAiService openAiService;
     private final JobPostingService jobPostingService;
 
-    private static final List<String> TECH_KEYWORDS = List.of(
-            "Java", "Python", "JavaScript", "Spring", "Spring Boot", "Node.js", "React", "Vue", "Angular",
-            "Django", "Flask", "Express", "MySQL", "PostgreSQL", "MongoDB", "AWS", "Docker", "Kubernetes",
-            "Redis", "GraphQL", "TypeScript", "Swift", "Kotlin", "C++", "C#", "Go", "Ruby", "Rust"
-    );
+    /**
+     * 🟢 기본 채팅 API (사용자 입력을 OpenAI에 전달)
+     */
+    @PostMapping("/chat")
+    public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody Map<String, String> request) {
+        String userMessage = request.get("message");
+        log.info("📩 사용자 채팅 요청: {}", userMessage);
+        return openAiService.chatWithOpenAi(userMessage)
+                .map(ResponseEntity::ok);
+    }
 
-    @PostMapping(value = "/analyze-skills", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    /**
+     * 🔵 이력서 스킬 분석 API (PDF 업로드)
+     * - `multipart/form-data` 요청을 받아 PDF 파일을 처리
+     * - PDF에서 텍스트 추출 후 기술 분석 수행
+     */
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<ResponseEntity<Map<String, Object>>> analyzeResumeSkills(
             @RequestParam("resume") MultipartFile resumeFile) {
         log.info("📌 이력서 기술 분석 요청 시작");
@@ -56,6 +66,9 @@ public class OpenAiController {
                 });
     }
 
+    /**
+     * ✅ PDF 파일에서 텍스트 추출하는 메서드
+     */
     private String extractTextFromPdf(MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -63,12 +76,24 @@ public class OpenAiController {
         }
     }
 
+    /**
+     * ✅ 이력서에서 기술 스택을 추출하는 메서드
+     */
     private List<String> extractSkillsFromResume(String resumeText) {
+        List<String> TECH_KEYWORDS = List.of(
+                "Java", "Python", "JavaScript", "Spring", "Spring Boot", "Node.js", "React", "Vue", "Angular",
+                "Django", "Flask", "Express", "MySQL", "PostgreSQL", "MongoDB", "AWS", "Docker", "Kubernetes",
+                "Redis", "GraphQL", "TypeScript", "Swift", "Kotlin", "C++", "C#", "Go", "Ruby", "Rust"
+        );
+
         return TECH_KEYWORDS.stream()
                 .filter(skill -> resumeText.toLowerCase().contains(skill.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * ✅ 이력서 기술과 채용 공고 기술 비교
+     */
     private Map<String, List<String>> compareSkills(List<String> resumeSkills, List<JobPostingDAO> jobPostings) {
         Set<String> jobSkills = jobPostings.stream()
                 .flatMap(job -> List.of(job.getStack().split(",")).stream())
