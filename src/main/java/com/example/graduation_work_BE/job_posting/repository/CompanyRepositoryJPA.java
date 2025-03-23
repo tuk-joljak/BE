@@ -7,5 +7,5 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CompanyRepositoryJPA extends JpaRepository<CompanyDAO, UUID> {
-    Optional<CompanyDAO> findByCompanyName(String companyName);
+    Optional<CompanyDAO> findByCompanyNameIgnoreCase(String companyName);
 }

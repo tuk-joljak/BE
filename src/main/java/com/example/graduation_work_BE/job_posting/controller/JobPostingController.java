@@ -62,14 +62,14 @@ public class JobPostingController {
     // 크롤링한 공고 저장
     // ✅ 채용 공고 저장
     @PostMapping
-    public ResponseEntity<?> saveJobPosting(@RequestBody RequestJobPostingSaveDTO dto) {
+    public ResponseEntity<?> saveJobPosting(@RequestBody RequestJobPostingSaveDTO requestJobPostingSaveDTO) {
         // ✅ companyId 조회 및 자동 생성
-        UUID companyId = companyService.getOrCreateCompanyId(dto.getCompanyName());
+        UUID companyId = companyService.getOrCreateCompanyId(requestJobPostingSaveDTO.getCompanyName());
 
         // ✅ DTO에 companyId 추가
-        dto.setCompanyId(companyId);
+        requestJobPostingSaveDTO.setCompanyId(companyId);
 
-        jobPostingService.saveJobPosting(dto);
+        jobPostingService.saveJobPosting(requestJobPostingSaveDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

@@ -48,34 +48,34 @@ public class JobPostingService {
 
     // ✅ 채용 공고 저장
     @Transactional
-    public UUID saveJobPosting(RequestJobPostingSaveDTO request) {
+    public void saveJobPosting(RequestJobPostingSaveDTO requestJobPostingSaveDTO) {
+        String normalizedCompanyName = requestJobPostingSaveDTO.getCompanyName().trim().toLowerCase();
         // ✅ `companyName`을 기반으로 `CompanyDAO` 조회 (없으면 새로 생성)
-        CompanyDAO company = companyRepositoryJPA.findByCompanyName(request.getCompanyName())
+        CompanyDAO company = companyRepositoryJPA.findByCompanyNameIgnoreCase(normalizedCompanyName)
                 .orElseGet(() -> {
                     CompanyDAO newCompany = new CompanyDAO();
                     newCompany.setCompanyId(UUID.randomUUID()); // ✅ 새로운 UUID 생성
-                    newCompany.setCompanyName(request.getCompanyName());
+                    newCompany.setCompanyName(requestJobPostingSaveDTO.getCompanyName());
                     return companyRepositoryJPA.save(newCompany);
                 });
 
         // ✅ `JobPostingDAO` 생성 및 저장
         JobPostingDAO jobPosting = JobPostingDAO.builder()
                 .jobPostingId(UUID.randomUUID()) // ✅ 고유한 ID 생성
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .location(request.getLocation())
-                .career(request.getCareer())
-                .task(request.getTask())
-                .qualification(request.getQualification())
-                .preference(request.getPreference())
-                .stack(request.getStack())
-                .hiringProcess(request.getHiringProcess())
+                .title(requestJobPostingSaveDTO.getTitle())
+                .description(requestJobPostingSaveDTO.getDescription())
+                .location(requestJobPostingSaveDTO.getLocation())
+                .career(requestJobPostingSaveDTO.getCareer())
+                .task(requestJobPostingSaveDTO.getTask())
+                .qualification(requestJobPostingSaveDTO.getQualification())
+                .preference(requestJobPostingSaveDTO.getPreference())
+                .stack(requestJobPostingSaveDTO.getStack())
+                .hiringProcess(requestJobPostingSaveDTO.getHiringProcess())
                 .createAt(LocalDateTime.now())
                 .updateAt(LocalDateTime.now())
                 .companyDAO(company) // ✅ `companyId` 대신 `companyDAO` 설정
                 .build();
 
         jobPostingRepositoryJPA.save(jobPosting);
-        return jobPosting.getJobPostingId();
     }
 }
