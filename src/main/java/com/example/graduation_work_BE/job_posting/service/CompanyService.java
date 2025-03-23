@@ -23,7 +23,7 @@ public class CompanyService {
      */
     @Transactional(readOnly = true)
     public UUID getCompanyId(String companyName) {
-        Optional<CompanyDAO> company = companyRepositoryJPA.findByCompanyNameIgnoreCase(companyName);
+        Optional<CompanyDAO> company = companyRepositoryJPA.findByCompanyName(companyName);
         return company.map(CompanyDAO::getCompanyId).orElse(null);
     }
 
@@ -62,7 +62,7 @@ public class CompanyService {
     }
 
     public UUID getOrCreateCompanyId(String companyName) {
-        return companyRepositoryJPA.findByCompanyNameIgnoreCase(companyName)
+        return companyRepositoryJPA.findByCompanyName(companyName)
                 .map(CompanyDAO::getCompanyId)
                 .orElseGet(() -> {
                     CompanyDAO newCompany = new CompanyDAO();

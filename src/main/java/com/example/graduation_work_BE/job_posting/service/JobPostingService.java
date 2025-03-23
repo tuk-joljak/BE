@@ -49,9 +49,9 @@ public class JobPostingService {
     // ✅ 채용 공고 저장
     @Transactional
     public void saveJobPosting(RequestJobPostingSaveDTO requestJobPostingSaveDTO) {
-        String normalizedCompanyName = requestJobPostingSaveDTO.getCompanyName().trim().toLowerCase();
+//        String normalizedCompanyName = requestJobPostingSaveDTO.getCompanyName().trim().toLowerCase();
         // ✅ `companyName`을 기반으로 `CompanyDAO` 조회 (없으면 새로 생성)
-        CompanyDAO company = companyRepositoryJPA.findByCompanyNameIgnoreCase(normalizedCompanyName)
+        CompanyDAO company = companyRepositoryJPA.findByCompanyName(requestJobPostingSaveDTO.getCompanyName())
                 .orElseGet(() -> {
                     CompanyDAO newCompany = new CompanyDAO();
                     newCompany.setCompanyId(UUID.randomUUID()); // ✅ 새로운 UUID 생성
