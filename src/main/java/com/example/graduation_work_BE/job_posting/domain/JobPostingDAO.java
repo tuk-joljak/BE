@@ -26,6 +26,7 @@ public class JobPostingDAO {
     String preference; // 우대사항
     String stack; // 기술스택
     String hiringProcess; // 고용과정
+    String imageUrl; // 채용공고 썸네일
 
     LocalDateTime createAt;
     LocalDateTime updateAt;

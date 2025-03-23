@@ -73,6 +73,7 @@ public class JobPostingService {
                 .hiringProcess(requestJobPostingSaveDTO.getHiringProcess())
                 .createAt(LocalDateTime.now())
                 .updateAt(LocalDateTime.now())
+                .imageUrl(requestJobPostingSaveDTO.getImageUrl())
                 .companyDAO(company) // ✅ `companyId` 대신 `companyDAO` 설정
                 .build();
 

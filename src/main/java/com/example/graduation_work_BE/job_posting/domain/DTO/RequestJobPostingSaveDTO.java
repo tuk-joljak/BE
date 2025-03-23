@@ -20,4 +20,5 @@ public class RequestJobPostingSaveDTO {
     private String preference;
     private String stack;
     private String hiringProcess;
+    private String imageUrl;
 }
