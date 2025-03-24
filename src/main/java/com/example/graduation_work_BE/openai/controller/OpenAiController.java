@@ -1,5 +1,6 @@
 package com.example.graduation_work_BE.openai.controller;
 
+import com.example.graduation_work_BE.openai.entity.DTO.OpenAiRequestDTO;
 import com.example.graduation_work_BE.openai.entity.DTO.OpenAiResponseDTO;
 import com.example.graduation_work_BE.openai.service.OpenAiService;
 import com.example.graduation_work_BE.job_posting.domain.JobPostingDAO;
@@ -27,25 +28,16 @@ public class OpenAiController {
     private final OpenAiService openAiService;
     private final JobPostingService jobPostingService;
 
-    /**
-     * 🟢 기본 채팅 API (사용자 입력을 OpenAI에 전달)
-     */
     @PostMapping("/chat")
-    public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody Map<String, String> request) {
-        String userMessage = request.get("message");
-        log.info("📩 사용자 채팅 요청: {}", userMessage);
-        return openAiService.chatWithOpenAi(userMessage)
+    public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody OpenAiRequestDTO openAiRequestDTO) {
+        return openAiService.getCompletion(openAiRequestDTO.getMessages().stream()
+                        .map(msg -> Map.of("role", msg.getRole(), "content", msg.getContent()))
+                        .toList())
                 .map(ResponseEntity::ok);
     }
 
-    /**
-     * 🔵 이력서 스킬 분석 API (PDF 업로드)
-     * - `multipart/form-data` 요청을 받아 PDF 파일을 처리
-     * - PDF에서 텍스트 추출 후 기술 분석 수행
-     */
-    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<Map<String, Object>>> analyzeResumeSkills(
-            @RequestParam("resume") MultipartFile resumeFile) {
+    @PostMapping(value = "/analyze", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Mono<ResponseEntity<Map<String, Object>>> analyzeResumeSkills(@RequestParam("resume") MultipartFile resumeFile) {
         log.info("📌 이력서 기술 분석 요청 시작");
 
         return Mono.fromCallable(() -> extractTextFromPdf(resumeFile))
@@ -54,7 +46,9 @@ public class OpenAiController {
                     List<JobPostingDAO> jobPostings = jobPostingService.getRecommendedJobPostings(resumeSkills);
                     Map<String, List<String>> skillComparison = compareSkills(resumeSkills, jobPostings);
 
-                    return openAiService.suggestSkillsImprovement(skillComparison.get("missingSkills"))
+                    String prompt = buildPrompt(resumeSkills, skillComparison.get("missingSkills"));
+
+                    return openAiService.sendChatCompletionWithPrompt(prompt)
                             .map(aiResponse -> {
                                 Map<String, Object> response = new HashMap<>();
                                 response.put("commonSkills", skillComparison.get("commonSkills"));
@@ -66,9 +60,6 @@ public class OpenAiController {
                 });
     }
 
-    /**
-     * ✅ PDF 파일에서 텍스트 추출하는 메서드
-     */
     private String extractTextFromPdf(MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -76,9 +67,6 @@ public class OpenAiController {
         }
     }
 
-    /**
-     * ✅ 이력서에서 기술 스택을 추출하는 메서드
-     */
     private List<String> extractSkillsFromResume(String resumeText) {
         List<String> TECH_KEYWORDS = List.of(
                 "Java", "Python", "JavaScript", "Spring", "Spring Boot", "Node.js", "React", "Vue", "Angular",
@@ -91,12 +79,10 @@ public class OpenAiController {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * ✅ 이력서 기술과 채용 공고 기술 비교
-     */
     private Map<String, List<String>> compareSkills(List<String> resumeSkills, List<JobPostingDAO> jobPostings) {
         Set<String> jobSkills = jobPostings.stream()
-                .flatMap(job -> List.of(job.getStack().split(",")).stream())
+                .flatMap(job -> Arrays.stream(job.getStack().split(",")))
+                .map(String::trim)
                 .collect(Collectors.toSet());
 
         List<String> commonSkills = resumeSkills.stream()
@@ -111,5 +97,18 @@ public class OpenAiController {
                 "commonSkills", commonSkills,
                 "missingSkills", missingSkills
         );
+    }
+
+    private String buildPrompt(List<String> resumeSkills, List<String> missingSkills) {
+        return """
+            다음은 사용자의 이력서에서 추출한 기술입니다:
+            %s
+
+            다음은 채용공고에서 요구하는 기술 중 사용자가 갖추지 못한 기술입니다:
+            %s
+
+            이력서가 이 채용공고에 적합한지 평가해 주세요.
+            부족한 기술을 보완하기 위한 학습 방법과 추천 자료도 제공해 주세요.
+            """.formatted(String.join(", ", resumeSkills), String.join(", ", missingSkills));
     }
 }
