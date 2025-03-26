@@ -12,6 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/company")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class CompanyController {
     private final CompanyService companyService;
 

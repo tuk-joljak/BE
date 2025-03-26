@@ -14,6 +14,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/job/posting")
+@CrossOrigin("*")
 public class JobPostingController {
 
     JobPostingService jobPostingService;

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/openai")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin("*")
 public class OpenAiController {
 
     private final OpenAiService openAiService;
