@@ -37,7 +37,7 @@ public class JobPostingController {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("success", success);
         requestMap.put("message", success ? "공고 전체 조회 성공" : "공고 전체 조회 실패");
-        requestMap.put("menuList", responseJobPostingsGetDTO);
+        requestMap.put("jobPostingList", responseJobPostingsGetDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(requestMap);
     }
@@ -54,7 +54,7 @@ public class JobPostingController {
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("success", success);
         requestMap.put("message", success ? "특정 공고 조회 성공" : "특정 공고 조회 실패");
-        requestMap.put("menuList", responseJobPostingGetDTO);
+        requestMap.put("jobPostingInfo", responseJobPostingGetDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(requestMap);
 
