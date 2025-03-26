@@ -2,9 +2,7 @@ package com.example.graduation_work_BE.resume.entity;
 
 import com.example.graduation_work_BE.resume.convert.StringListConvert;
 import com.example.graduation_work_BE.resume.convert.StringListMapConvert;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -23,15 +21,15 @@ public class ResumeDAO {
 
     UUID userId;
 
-    @Convert(converter = StringListMapConvert.class)
-    List<Map<String, Object>> preferredJobFieldList;
+    @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<JobCategoryDAO> jobCategoryDAOS;
 
-    @Convert(converter = StringListConvert.class)
-    List<String> stackList;
+    @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TechStackDAO> techStackDAOS;
 
-    @Convert(converter = StringListMapConvert.class)
-    List<Map<String, Object>> careerList;
+    @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<CareerDAO> careerDAOs;
 
-    @Convert(converter = StringListMapConvert.class)
-    List<Map<String, Object>> projectList;
+    @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProjectDAO> projectDAOS;
 }

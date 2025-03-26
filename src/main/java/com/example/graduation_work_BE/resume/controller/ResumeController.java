@@ -22,7 +22,8 @@ public class ResumeController {
         this.resumeService = resumeService;
     }
 
-    @PostMapping
+    // 업무 분야 저장
+    @PostMapping("/input")
     public ResponseEntity<Map<String, Object>> createResume(@RequestBody RequestResumeSaveDTO requestResumeSaveDTO) {
 
         UUID resumeId = resumeService.createResume(requestResumeSaveDTO);

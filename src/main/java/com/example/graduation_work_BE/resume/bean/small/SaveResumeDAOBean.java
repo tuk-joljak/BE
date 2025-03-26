@@ -1,6 +1,5 @@
 package com.example.graduation_work_BE.resume.bean.small;
 
-import com.example.graduation_work_BE.resume.bean.SaveResumeBean;
 import com.example.graduation_work_BE.resume.entity.ResumeDAO;
 import com.example.graduation_work_BE.resume.repository.ResumeRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
