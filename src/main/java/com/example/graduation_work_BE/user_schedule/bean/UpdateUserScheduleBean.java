@@ -27,6 +27,7 @@ public class UpdateUserScheduleBean {
     public UUID exec(RequestUserScheduleUpdateDTO requestUserScheduleUpdateDTO){
         // 1. userScheduleId로 db에서 찾아와서 DAO 객체에다가 넣는다
         UserScheduleDAO userScheduleDAO = getUserScheduleDAOBean.exec(requestUserScheduleUpdateDTO.getUserScheduleId());
+        if (userScheduleDAO==null) return null;
 
         // 2. DAO 값을 수정한다
         userScheduleDAO.setScheduleContent(requestUserScheduleUpdateDTO.getScheduleContent());

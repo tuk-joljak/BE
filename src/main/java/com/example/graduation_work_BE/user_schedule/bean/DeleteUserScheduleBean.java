@@ -23,6 +23,7 @@ public class DeleteUserScheduleBean {
     }
     public UUID exec(RequestUserScheduleDeleteDTO requestUserScheduleDeleteDTO){
         UserScheduleDAO userScheduleDAO = getUserScheduleDAOBean.exec(requestUserScheduleDeleteDTO.getUserScheduleId());
+        if (userScheduleDAO == null) return null;
 
         deleteUserScheduleDAOBean.exec(userScheduleDAO);
 

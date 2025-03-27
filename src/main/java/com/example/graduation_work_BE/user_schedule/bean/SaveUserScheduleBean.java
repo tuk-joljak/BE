@@ -24,6 +24,7 @@ public class SaveUserScheduleBean {
     public UUID exec(RequestUserScheduleSaveDTO requestUserScheduleSaveDTO){
         // DAO객체에다 정보를 넣어야겟죠
         UserScheduleDAO userScheduleDAO = createUserScheduleDAOBean.exec(requestUserScheduleSaveDTO);
+        if (userScheduleDAO == null) return null;
 
         // DAO객체에 넣은 정보를 토대로 DB에 저장
         saveUserScheduleDAOBean.exec(userScheduleDAO);
