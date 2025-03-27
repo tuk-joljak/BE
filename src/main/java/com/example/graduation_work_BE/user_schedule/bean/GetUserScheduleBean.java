@@ -24,7 +24,7 @@ public class GetUserScheduleBean {
     public ResponseUserScheduleGetDTO exec(UUID userScheduleId){
 
         UserScheduleDAO userScheduleDAO = getUserScheduleDAOBean.exec(userScheduleId);
-        if (userScheduleId == null) return null;
+        if (userScheduleDAO == null) return null;
 
         return createUserScheduleDTOBean.exec(userScheduleDAO);
     }
