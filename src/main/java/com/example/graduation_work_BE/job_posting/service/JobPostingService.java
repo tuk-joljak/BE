@@ -38,6 +38,10 @@ public class JobPostingService {
         return getJobPostingBean.exec(jobPostingId);
     }
 
+    public List<JobPostingDAO> getAllJobPosting(){
+        return jobPostingRepositoryJPA.findAll();
+    }
+
     // ✅ 추천 공고 조회
     public List<JobPostingDAO> getRecommendedJobPostings(List<String> resumeSkills) {
         return jobPostingRepositoryJPA.findAll().stream()
