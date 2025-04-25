@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,8 +15,7 @@ import java.time.LocalDateTime;
 public class OpenAiDAO {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 ID
-    private Long id;
+    UUID openAiId;
 
     @Column(columnDefinition = "TEXT", nullable = false) // 긴 텍스트 저장
     private String prompt;

@@ -11,10 +11,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/company")
-@RequiredArgsConstructor
 @CrossOrigin("*")
 public class CompanyController {
-    private final CompanyService companyService;
+
+    CompanyService companyService;
+
+    public CompanyController(CompanyService companyService) {
+        this.companyService = companyService;
+    }
 
     /**
      * ✅ 회사명으로 companyId 조회 API

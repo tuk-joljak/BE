@@ -5,6 +5,8 @@ import com.example.graduation_work_BE.openai.entity.DTO.OpenAiResponseDTO;
 import com.example.graduation_work_BE.openai.service.OpenAiService;
 import com.example.graduation_work_BE.job_posting.domain.JobPostingDAO;
 import com.example.graduation_work_BE.job_posting.service.JobPostingService;
+import com.example.graduation_work_BE.resume.entity.ResumeDAO;
+import com.example.graduation_work_BE.resume.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -13,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -21,13 +24,19 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/openai")
-@RequiredArgsConstructor
 @Slf4j
 @CrossOrigin("*")
 public class OpenAiController {
 
-    private final OpenAiService openAiService;
-    private final JobPostingService jobPostingService;
+    OpenAiService openAiService;
+    JobPostingService jobPostingService;
+    ResumeService resumeService;
+
+    public OpenAiController(ResumeService resumeService, JobPostingService jobPostingService, OpenAiService openAiService) {
+        this.resumeService = resumeService;
+        this.jobPostingService = jobPostingService;
+        this.openAiService = openAiService;
+    }
 
     @PostMapping("/chat")
     public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody OpenAiRequestDTO openAiRequestDTO) {
@@ -58,6 +67,29 @@ public class OpenAiController {
                                 response.put("recommendedJobs", jobPostings);
                                 return ResponseEntity.ok(response);
                             });
+                });
+    }
+
+    @PostMapping("/analyze/form")
+    public Mono<ResponseEntity<Map<String, Object>>> analyzeResumeForm(@RequestParam UUID resumeId) {
+        log.info("📌 폼 기반 이력서 분석 요청 시작: resumeId={}", resumeId);
+        ResumeDAO resumeDAO = resumeService.getResumeById(resumeId);
+        String resumeText = openAiService.buildResumeText(resumeDAO);
+
+        List<String> resumeSkills = extractSkillsFromResume(resumeText);
+        List<JobPostingDAO> jobPostings = jobPostingService.getRecommendedJobPostings(resumeSkills);
+        Map<String, List<String>> skillComparison = compareSkills(resumeSkills, jobPostings);
+
+        String prompt = buildPrompt(resumeSkills, skillComparison.get("missingSkills"));
+
+        return openAiService.sendChatCompletionWithPrompt(prompt)
+                .map(aiResponse -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("commonSkills", skillComparison.get("commonSkills"));
+                    response.put("missingSkills", skillComparison.get("missingSkills"));
+                    response.put("recommendations", aiResponse.getResponses());
+                    response.put("recommendedJobs", jobPostings);
+                    return ResponseEntity.ok(response);
                 });
     }
 

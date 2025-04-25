@@ -2,6 +2,7 @@ package com.example.graduation_work_BE.openai.service;
 
 import com.example.graduation_work_BE.openai.config.OpenAiConfig;
 import com.example.graduation_work_BE.openai.entity.DTO.OpenAiResponseDTO;
+import com.example.graduation_work_BE.resume.entity.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -113,4 +115,40 @@ public class OpenAiService {
         String content = (String) message.get("content");
         return new OpenAiResponseDTO(List.of(content));
     }
+
+    public String buildResumeText(ResumeDAO resume) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("기술 스택: ").append(
+                resume.getTechStackDAOS().stream()
+                        .map(TechStackDAO::getStack)
+                        .collect(Collectors.joining(", "))
+        ).append("\n\n");
+
+        sb.append("경력:\n");
+        for (CareerDAO c : resume.getCareerDAOs()) {
+            sb.append("- ").append(c.getCompanyName())
+                    .append(" / ").append(c.getPosition())
+                    .append(" / ").append(c.getDepartment())
+                    .append(" / ").append(c.getWorkingPeriod())
+                    .append(" / ").append(c.getResponsibility())
+                    .append("\n");
+        }
+
+        sb.append("\n프로젝트 경험:\n");
+        for (ProjectDAO p : resume.getProjectDAOS()) {
+            sb.append("- ").append(p.getProjectName())
+                    .append(" @ ").append(p.getOrganization())
+                    .append(" (").append(p.getStartDate()).append(" ~ ").append(p.getEndDate()).append(")\n")
+                    .append(p.getDescription()).append("\n");
+        }
+
+        sb.append("\n희망 직무: ");
+        for (JobCategoryDAO j : resume.getJobCategoryDAOS()) {
+            sb.append(j.getHopeJobGroup()).append(" - ").append(String.join(", ", j.getHopeJobRole())).append("\n");
+        }
+
+        return sb.toString();
+    }
+
 }
