@@ -1,6 +1,7 @@
 package com.example.graduation_work_BE.study_group.controller;
 
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
+import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupUpdateDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
 import org.springframework.http.HttpStatus;
@@ -75,7 +76,20 @@ public class StudyGroupController {
     }
 
     // 스터디그룹 수정
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateStudyGroup(@RequestBody RequestStudyGroupUpdateDTO requestStudyGroupUpdateDTO) {
 
+        UUID studyGroupId = studyGroupService.updateStudyGroup(requestStudyGroupUpdateDTO);
+
+        boolean success = (studyGroupId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "스터디 수정 성공" : "스터디 수정 실패");
+        requestMap.put("studyGroupId", studyGroupId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
 
 
