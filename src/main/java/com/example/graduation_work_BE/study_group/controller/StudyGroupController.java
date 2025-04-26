@@ -3,13 +3,12 @@ package com.example.graduation_work_BE.study_group.controller;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
-import com.example.graduation_work_BE.user_schedule.entity.DTO.RequestUserScheduleSaveDTO;
-import com.example.graduation_work_BE.user_schedule.entity.DTO.ResponseUserScheduleGetDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,7 +40,20 @@ public class StudyGroupController {
     }
 
     // 전체 스터디그룹 조회
+    @GetMapping("/all/{studyGroupId}")
+    public ResponseEntity<Map<String, Object>> getStudyGroups(@PathVariable("studyGroupId") UUID studyGroupId) {
 
+        List<ResponseStudyGroupGetDTO> responseStudyGroupsGetDTO = studyGroupService.getStudyGroups(studyGroupId);
+
+        boolean success = (responseStudyGroupsGetDTO == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "전체 스터디 조회 성공" : "전체 스터디 조회 실패");
+        requestMap.put("studyGroupList", responseStudyGroupsGetDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
 
 
