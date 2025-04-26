@@ -1,5 +1,6 @@
 package com.example.graduation_work_BE.study_group.controller;
 
+import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupDeleteDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupUpdateDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
@@ -94,7 +95,21 @@ public class StudyGroupController {
 
 
     // 스터디그룹 삭제
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteStudyGroup(@RequestBody RequestStudyGroupDeleteDTO requestStudyGroupDeleteDTO){
 
+        UUID studyGroupId = studyGroupService.deleteStudyGroup(requestStudyGroupDeleteDTO);
+
+        boolean success = (studyGroupId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "스터디 삭제 성공" : "스터디 삭제 실패");
+        requestMap.put("studyGroupId", studyGroupId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+
+    }
 
 
 

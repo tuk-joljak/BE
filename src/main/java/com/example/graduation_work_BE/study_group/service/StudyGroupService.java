@@ -1,9 +1,7 @@
 package com.example.graduation_work_BE.study_group.service;
 
-import com.example.graduation_work_BE.study_group.bean.GetStudyGroupBean;
-import com.example.graduation_work_BE.study_group.bean.GetStudyGroupsBean;
-import com.example.graduation_work_BE.study_group.bean.SaveStudyGroupBean;
-import com.example.graduation_work_BE.study_group.bean.UpdateStudyGroupBean;
+import com.example.graduation_work_BE.study_group.bean.*;
+import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupDeleteDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupUpdateDTO;
 import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
@@ -21,16 +19,15 @@ public class StudyGroupService {
     GetStudyGroupsBean getStudyGroupsBean; // 전체 스터디그룹 조회
     SaveStudyGroupBean saveStudyGroupBean; // 스터디그룹 생성
     UpdateStudyGroupBean updateStudyGroupBean; // 스터디그룹 수정
-    // 스터디그룹 삭제
+    DeleteStudyGroupBean deleteStudyGroupBean; // 스터디그룹 삭제
 
     @Autowired
-    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean){
+    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean,DeleteStudyGroupBean deleteStudyGroupBean){
         this.getStudyGroupBean = getStudyGroupBean;
         this.getStudyGroupsBean = getStudyGroupsBean;
         this.saveStudyGroupBean = saveStudyGroupBean;
         this.updateStudyGroupBean = updateStudyGroupBean;
-
-
+        this.deleteStudyGroupBean = deleteStudyGroupBean;
 
 
     }
@@ -66,7 +63,9 @@ public class StudyGroupService {
 
 
     // 스터디그룹 삭제
-
+    public UUID deleteStudyGroup(RequestStudyGroupDeleteDTO requestStudyGroupDeleteDTO){
+        return deleteStudyGroupBean.exec(requestStudyGroupDeleteDTO);
+    }
 
 }
 
