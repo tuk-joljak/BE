@@ -1,8 +1,9 @@
 package com.example.graduation_work_BE.study_group.service;
 
+import com.example.graduation_work_BE.study_group.bean.GetStudyGroupBean;
 import com.example.graduation_work_BE.study_group.bean.SaveStudyGroupBean;
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
-import com.example.graduation_work_BE.user_schedule.entity.DTO.RequestUserScheduleSaveDTO;
+import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,8 @@ import java.util.UUID;
 @Service
 public class StudyGroupService {
 
-    // 스터디그룹 전체 조회
-    // 스터디그룹 상세 조회
+    GetStudyGroupBean getStudyGroupBean;  // 특정 스터디그룹 조회
+    // 전체 스터디그룹 조회
     SaveStudyGroupBean saveStudyGroupBean; // 스터디그룹 생성
     // 스터디그룹 수정
     // 스터디그룹 삭제
@@ -26,14 +27,17 @@ public class StudyGroupService {
 
     }
 
+    // 특정 스터디그룹 조회
+    public ResponseStudyGroupGetDTO getStudyGroup(UUID studyGroupId){
+        return getStudyGroupBean.exec(studyGroupId);
+    }
 
 
-    // 스터디그룹 전체조회
 
 
+    // 전체 스터디그룹 조회
 
 
-    // 스터디그룹 상세조회
 
 
 

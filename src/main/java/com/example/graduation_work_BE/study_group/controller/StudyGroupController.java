@@ -1,8 +1,10 @@
 package com.example.graduation_work_BE.study_group.controller;
 
 import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
+import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
 import com.example.graduation_work_BE.user_schedule.entity.DTO.RequestUserScheduleSaveDTO;
+import com.example.graduation_work_BE.user_schedule.entity.DTO.ResponseUserScheduleGetDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +23,30 @@ public class StudyGroupController {
     public StudyGroupController(StudyGroupService studyGroupService) {
         this.studyGroupService = studyGroupService;
     }
-    // 스터디그룹 전체조회
+
+    // 특정 스터디그룹 조회
+    @GetMapping("/{studyGroupId}")
+    public ResponseEntity<Map<String, Object>> getStudyGroup(@PathVariable("studyGroupId") UUID studyGroupId) {
+
+        ResponseStudyGroupGetDTO responseStudyGroupGetDTO = studyGroupService.getStudyGroup(studyGroupId);
+
+        boolean success = (responseStudyGroupGetDTO == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "특정 스터디 조회 성공" : "특정 스터디 조회 실패");
+        requestMap.put("studyGroupInfo", responseStudyGroupGetDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
+
+    // 전체 스터디그룹 조회
 
 
-
-
-    // 스터디그룹 상세조회
 
 
 
     // 스터디그룹 생성
-    // 사용자가 스터디그룹 생성 -> 정보 입력해서 프론트 request를 보내겠지 -> controller로 받고 service로 보내주겠지
-    // -> bean(small)로 가서 생성할 내용 db에 저장해줘
     @PostMapping
     public ResponseEntity<Map<String, Object>> saveStudyGroup(@RequestBody RequestStudyGroupSaveDTO requestStudyGroupSaveDTO) {
 
@@ -54,5 +68,11 @@ public class StudyGroupController {
 
 
     // 스터디그룹 삭제
+
+
+
+
+
+
 
 }
