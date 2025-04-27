@@ -28,7 +28,7 @@ public class ResumeDAO {
     List<TechStackDAO> techStackDAOS;
 
     @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CareerDAO> careerDAOs;
+    List<CareerDAO> careerDAOS;
 
     @OneToMany(mappedBy = "resumeDAO", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProjectDAO> projectDAOS;

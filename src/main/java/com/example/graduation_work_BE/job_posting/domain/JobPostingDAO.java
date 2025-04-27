@@ -21,8 +21,13 @@ public class JobPostingDAO {
     String deadline; // 마감일
     String location; // 위치
     String career; // 경력
+
+    @Column(length = 1000)
     String task; // 주요업무
+
+    @Column(length = 1000)
     String qualification; // 자격요건
+
     String preference; // 우대사항
     String stack; // 기술스택
     String hiringProcess; // 고용과정

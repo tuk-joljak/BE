@@ -4,12 +4,14 @@ import com.example.graduation_work_BE.resume.bean.GetResumeBean;
 import com.example.graduation_work_BE.resume.bean.SaveResumeBean;
 import com.example.graduation_work_BE.resume.entity.DTO.RequestResumeSaveDTO;
 import com.example.graduation_work_BE.resume.entity.ResumeDAO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class ResumeService {
 
     SaveResumeBean saveResumeBean;

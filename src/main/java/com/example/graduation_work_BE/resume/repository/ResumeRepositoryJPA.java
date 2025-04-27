@@ -19,7 +19,7 @@ public interface ResumeRepositoryJPA extends JpaRepository<ResumeDAO, UUID> {
     @Query("SELECT r FROM ResumeDAO r LEFT JOIN FETCH r.projectDAOS WHERE r.resumeId = :resumeId")
     Optional<ResumeDAO> fetchProjects(@Param("resumeId") UUID resumeId);
 
-    @Query("SELECT r FROM ResumeDAO r LEFT JOIN FETCH r.careerDAOs WHERE r.resumeId = :resumeId")
+    @Query("SELECT r FROM ResumeDAO r LEFT JOIN FETCH r.careerDAOS WHERE r.resumeId = :resumeId")
     Optional<ResumeDAO> fetchCareers(@Param("resumeId") UUID resumeId);
 
     @Query("SELECT r FROM ResumeDAO r LEFT JOIN FETCH r.jobCategoryDAOS WHERE r.resumeId = :resumeId")

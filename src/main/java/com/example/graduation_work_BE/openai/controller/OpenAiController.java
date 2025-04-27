@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -24,19 +23,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/openai")
+@RequiredArgsConstructor
 @Slf4j
 @CrossOrigin("*")
 public class OpenAiController {
 
-    OpenAiService openAiService;
-    JobPostingService jobPostingService;
-    ResumeService resumeService;
-
-    public OpenAiController(ResumeService resumeService, JobPostingService jobPostingService, OpenAiService openAiService) {
-        this.resumeService = resumeService;
-        this.jobPostingService = jobPostingService;
-        this.openAiService = openAiService;
-    }
+    private final OpenAiService openAiService;
+    private final JobPostingService jobPostingService;
+    private final ResumeService resumeService;
 
     @PostMapping("/chat")
     public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody OpenAiRequestDTO openAiRequestDTO) {
@@ -73,23 +67,45 @@ public class OpenAiController {
     @PostMapping("/analyze/form")
     public Mono<ResponseEntity<Map<String, Object>>> analyzeResumeForm(@RequestParam UUID resumeId) {
         log.info("📌 폼 기반 이력서 분석 요청 시작: resumeId={}", resumeId);
-        ResumeDAO resumeDAO = resumeService.getResumeById(resumeId);
-        String resumeText = openAiService.buildResumeText(resumeDAO);
 
-        List<String> resumeSkills = extractSkillsFromResume(resumeText);
-        List<JobPostingDAO> jobPostings = jobPostingService.getRecommendedJobPostings(resumeSkills);
-        Map<String, List<String>> skillComparison = compareSkills(resumeSkills, jobPostings);
+        return Mono.fromCallable(() -> {
+                    ResumeDAO resume = resumeService.getResumeById(resumeId);
+                    log.debug("✅ 이력서 조회 결과: {}", resume);  // 이력서 객체 확인
 
-        String prompt = buildPrompt(resumeSkills, skillComparison.get("missingSkills"));
+                    return resume;
+                })
+                .flatMap(resumeDAO -> {
+                    // 🧪 연관 엔티티가 제대로 채워졌는지 로그로 확인
+                    log.debug("✅ 기술 스택: {}", resumeDAO.getTechStackDAOS());
+                    log.debug("✅ 프로젝트: {}", resumeDAO.getProjectDAOS());
+                    log.debug("✅ 커리어: {}", resumeDAO.getCareerDAOS());
+                    log.debug("✅ 희망 직무: {}", resumeDAO.getJobCategoryDAOS());
 
-        return openAiService.sendChatCompletionWithPrompt(prompt)
-                .map(aiResponse -> {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("commonSkills", skillComparison.get("commonSkills"));
-                    response.put("missingSkills", skillComparison.get("missingSkills"));
-                    response.put("recommendations", aiResponse.getResponses());
-                    response.put("recommendedJobs", jobPostings);
-                    return ResponseEntity.ok(response);
+                    String resumeText = openAiService.buildResumeText(resumeDAO);
+                    log.debug("📝 이력서 텍스트 변환 결과:\n{}", resumeText);  // 텍스트 내용 확인
+
+                    List<String> resumeSkills = extractSkillsFromResume(resumeText);
+                    log.debug("🧠 추출된 이력서 기술: {}", resumeSkills);
+
+                    List<JobPostingDAO> jobPostings = jobPostingService.getRecommendedJobPostings(resumeSkills);
+                    log.debug("📄 추천된 채용공고 수: {}", jobPostings.size());
+
+                    Map<String, List<String>> skillComparison = compareSkills(resumeSkills, jobPostings);
+                    log.debug("📊 공통 기술: {}", skillComparison.get("commonSkills"));
+                    log.debug("❌ 부족한 기술: {}", skillComparison.get("missingSkills"));
+
+                    String prompt = buildPrompt(resumeSkills, skillComparison.get("missingSkills"));
+                    log.debug("🧾 생성된 프롬프트:\n{}", prompt);
+
+                    return openAiService.sendChatCompletionWithPrompt(prompt)
+                            .map(aiResponse -> {
+                                Map<String, Object> response = new HashMap<>();
+                                response.put("commonSkills", skillComparison.get("commonSkills"));
+                                response.put("missingSkills", skillComparison.get("missingSkills"));
+                                response.put("recommendations", aiResponse.getResponses());
+                                response.put("recommendedJobs", jobPostings);
+                                return ResponseEntity.ok(response);
+                            });
                 });
     }
 
@@ -102,10 +118,43 @@ public class OpenAiController {
 
     private List<String> extractSkillsFromResume(String resumeText) {
         List<String> TECH_KEYWORDS = List.of(
-                "Java", "Python", "JavaScript", "Spring", "Spring Boot", "Node.js", "React", "Vue", "Angular",
-                "Django", "Flask", "Express", "MySQL", "PostgreSQL", "MongoDB", "AWS", "Docker", "Kubernetes",
-                "Redis", "GraphQL", "TypeScript", "Swift", "Kotlin", "C++", "C#", "Go", "Ruby", "Rust"
+                // 백엔드
+                "Java", "Spring", "Spring Boot", "JPA", "Hibernate",
+                "Node.js", "Express", "Python", "Django", "Flask",
+                "Go", "Gin", "Rust", "C#", "ASP.NET",
+
+                // 프론트엔드
+                "HTML", "CSS", "JavaScript", "TypeScript",
+                "React", "Vue", "Angular", "Next.js", "Tailwind", "Sass",
+
+                // 데이터베이스
+                "MySQL", "PostgreSQL", "Oracle", "MongoDB", "Redis",
+                "SQLite", "MariaDB",
+
+                // DevOps & 인프라
+                "Docker", "Kubernetes", "Nginx", "Apache", "Jenkins", "GitHub Actions",
+                "CI/CD", "Linux", "Ubuntu", "AWS", "EC2", "S3", "Lambda",
+                "GCP", "Azure", "Terraform",
+
+                // CS 기반
+                "자료구조", "알고리즘", "운영체제", "네트워크", "DBMS", "OOP", "REST API",
+
+                // 협업 및 도구
+                "Git", "GitHub", "Notion", "Slack", "Jira", "Figma",
+
+                // 테스트
+                "JUnit", "Mockito", "Cypress", "Selenium",
+
+                // AI/데이터 관련
+                "Pandas", "NumPy", "Scikit-learn", "TensorFlow", "PyTorch", "OpenCV",
+
+                // 모바일
+                "Kotlin", "Swift", "React Native", "Flutter",
+
+                // 보안
+                "OAuth", "JWT", "HTTPS", "암호화", "인증", "인가"
         );
+
 
         return TECH_KEYWORDS.stream()
                 .filter(skill -> resumeText.toLowerCase().contains(skill.toLowerCase()))

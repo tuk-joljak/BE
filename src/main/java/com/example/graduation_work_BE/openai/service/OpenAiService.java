@@ -126,7 +126,7 @@ public class OpenAiService {
         ).append("\n\n");
 
         sb.append("경력:\n");
-        for (CareerDAO c : resume.getCareerDAOs()) {
+        for (CareerDAO c : resume.getCareerDAOS()) {
             sb.append("- ").append(c.getCompanyName())
                     .append(" / ").append(c.getPosition())
                     .append(" / ").append(c.getDepartment())

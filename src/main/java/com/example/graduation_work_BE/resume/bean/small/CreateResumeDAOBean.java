@@ -46,7 +46,7 @@ public class CreateResumeDAOBean {
                         .resumeDAO(resumeDAO)
                         .build())
                 .toList();
-        resumeDAO.setCareerDAOs(careers);
+        resumeDAO.setCareerDAOS(careers);
 
         List<ProjectDAO> projects = requestResumeSaveDTO.getProjectDTOS().stream()
                 .map(p -> ProjectDAO.builder()
