@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class GetStudyParticipantDAOBean {
@@ -18,5 +19,9 @@ public class GetStudyParticipantDAOBean {
 
     public List<StudyParticipantDAO> exec(){
         return studyParticipantRepositoryJPA.findAll();
+    }
+    public StudyParticipantDAO exec(UUID studyParticipantId) {
+        return studyParticipantRepositoryJPA.findById(studyParticipantId)
+                .orElse(null);
     }
 }

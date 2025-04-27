@@ -142,7 +142,21 @@ public class StudyGroupController {
 
 
     // 스터디그룹 참여자 삭제
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteStudyParticipant(@RequestBody RequestStudyParticipantDeleteDTO requestStudyParticipantDeleteDTO){
 
+        UUID userId = studyGroupService.deleteStudyParticipant(requestStudyParticipantDeleteDTO);
+
+        boolean success = (userId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "스터디그룹원 삭제 성공" : "스터디그룹원 삭제 실패");
+        requestMap.put("userId", userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+
+    }
 
 
 

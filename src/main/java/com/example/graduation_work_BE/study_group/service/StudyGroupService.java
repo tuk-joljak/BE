@@ -19,10 +19,10 @@ public class StudyGroupService {
     DeleteStudyGroupBean deleteStudyGroupBean; // 스터디그룹 삭제
     GetStudyParticipantBean getStudyParticipantBean; // 스터디그룹 참여자 조회
     SaveStudyParticipantBean saveStudyParticipantBean; // 스터디그룹 참여자 생성
-    // 스터디그룹 참여자 삭제
+    DeleteStudyParticipantBean deleteStudyParticipantBean; // 스터디그룹 참여자 삭제
 
     @Autowired
-    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean,DeleteStudyGroupBean deleteStudyGroupBean,GetStudyParticipantBean getStudyParticipantBean,SaveStudyParticipantBean saveStudyParticipantBean){
+    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean,DeleteStudyGroupBean deleteStudyGroupBean,GetStudyParticipantBean getStudyParticipantBean,SaveStudyParticipantBean saveStudyParticipantBean,DeleteStudyParticipantBean deleteStudyParticipantBean){
         this.getStudyGroupBean = getStudyGroupBean;
         this.getStudyGroupsBean = getStudyGroupsBean;
         this.saveStudyGroupBean = saveStudyGroupBean;
@@ -30,6 +30,7 @@ public class StudyGroupService {
         this.deleteStudyGroupBean = deleteStudyGroupBean;
         this.getStudyParticipantBean = getStudyParticipantBean;
         this.saveStudyParticipantBean = saveStudyParticipantBean;
+        this.deleteStudyParticipantBean = deleteStudyParticipantBean;
 
 
     }
@@ -81,7 +82,9 @@ public class StudyGroupService {
     }
 
     // 스터디그룹 참여자 삭제
-
+    public UUID deleteStudyParticipant(RequestStudyParticipantDeleteDTO requestStudyParticipantDeleteDTO){
+        return deleteStudyParticipantBean.exec(requestStudyParticipantDeleteDTO);
+    }
 }
 
 
