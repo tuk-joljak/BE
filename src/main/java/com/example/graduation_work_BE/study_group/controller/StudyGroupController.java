@@ -1,9 +1,6 @@
 package com.example.graduation_work_BE.study_group.controller;
 
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupDeleteDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupUpdateDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
+import com.example.graduation_work_BE.study_group.entity.DTO.*;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,6 +107,28 @@ public class StudyGroupController {
         return ResponseEntity.status(HttpStatus.OK).body(requestMap);
 
     }
+
+    // 스터디그룹 참여자 조회
+    @GetMapping("/all/participant")
+    public ResponseEntity<Map<String, Object>> getStudyParticipant() {
+
+        List<ResponseStudyParticipantGetDTO> responseStudyParticipantGetDTO = studyGroupService.getStudyParticipant();
+
+        boolean success = (responseStudyParticipantGetDTO == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "스터디그룹원 조회 성공" : "스터디그룹원 조회 실패");
+        requestMap.put("studyParticipantList", responseStudyParticipantGetDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
+
+    // 스터디그룹 참여자 생성
+
+
+    // 스터디그룹 참여자 삭제
+
 
 
 

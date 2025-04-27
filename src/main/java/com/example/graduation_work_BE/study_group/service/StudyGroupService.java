@@ -1,10 +1,7 @@
 package com.example.graduation_work_BE.study_group.service;
 
 import com.example.graduation_work_BE.study_group.bean.*;
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupDeleteDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupSaveDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.RequestStudyGroupUpdateDTO;
-import com.example.graduation_work_BE.study_group.entity.DTO.ResponseStudyGroupGetDTO;
+import com.example.graduation_work_BE.study_group.entity.DTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +17,18 @@ public class StudyGroupService {
     SaveStudyGroupBean saveStudyGroupBean; // 스터디그룹 생성
     UpdateStudyGroupBean updateStudyGroupBean; // 스터디그룹 수정
     DeleteStudyGroupBean deleteStudyGroupBean; // 스터디그룹 삭제
+    GetStudyParticipantBean getStudyParticipantBean; // 스터디그룹 참여자 조회
+    // 스터디그룹 참여자 생성
+    // 스터디그룹 참여자 삭제
 
     @Autowired
-    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean,DeleteStudyGroupBean deleteStudyGroupBean){
+    public StudyGroupService(GetStudyGroupBean getStudyGroupBean,GetStudyGroupsBean getStudyGroupsBean,SaveStudyGroupBean saveStudyGroupBean,UpdateStudyGroupBean updateStudyGroupBean,DeleteStudyGroupBean deleteStudyGroupBean,GetStudyParticipantBean getStudyParticipantBean){
         this.getStudyGroupBean = getStudyGroupBean;
         this.getStudyGroupsBean = getStudyGroupsBean;
         this.saveStudyGroupBean = saveStudyGroupBean;
         this.updateStudyGroupBean = updateStudyGroupBean;
         this.deleteStudyGroupBean = deleteStudyGroupBean;
+        this.getStudyParticipantBean = getStudyParticipantBean;
 
 
     }
@@ -66,6 +67,16 @@ public class StudyGroupService {
     public UUID deleteStudyGroup(RequestStudyGroupDeleteDTO requestStudyGroupDeleteDTO){
         return deleteStudyGroupBean.exec(requestStudyGroupDeleteDTO);
     }
+
+
+    // 스터디그룹 참여자 조회
+    public List<ResponseStudyParticipantGetDTO> getStudyParticipant(){
+        return getStudyParticipantBean.exec();
+    }
+
+    // 스터디그룹 참여자 생성
+
+    // 스터디그룹 참여자 삭제
 
 }
 
