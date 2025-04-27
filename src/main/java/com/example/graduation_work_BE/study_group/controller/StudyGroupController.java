@@ -42,10 +42,10 @@ public class StudyGroupController {
     }
 
     // 전체 스터디그룹 조회
-    @GetMapping("/all/{studyGroupId}")
-    public ResponseEntity<Map<String, Object>> getStudyGroups(@PathVariable("studyGroupId") UUID studyGroupId) {
+    @GetMapping("/all")
+    public ResponseEntity<Map<String, Object>> getStudyGroups() {
 
-        List<ResponseStudyGroupGetDTO> responseStudyGroupsGetDTO = studyGroupService.getStudyGroups(studyGroupId);
+        List<ResponseStudyGroupGetDTO> responseStudyGroupsGetDTO = studyGroupService.getStudyGroups();
 
         boolean success = (responseStudyGroupsGetDTO == null) ? false : true;
 

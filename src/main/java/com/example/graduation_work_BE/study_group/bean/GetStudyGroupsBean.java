@@ -22,8 +22,8 @@ public class GetStudyGroupsBean {
         this.createStudyGroupsDTOBean = createStudyGroupsDTOBean;
     }
 
-    public List<ResponseStudyGroupGetDTO> exec(UUID studyGroupId){
-        List<StudyGroupDAO> studyGroupDAOS = getStudyGroupsDAOBean.exec(studyGroupId);
+    public List<ResponseStudyGroupGetDTO> exec(){
+        List<StudyGroupDAO> studyGroupDAOS = getStudyGroupsDAOBean.exec();
         if (studyGroupDAOS == null) return null;
 
         return createStudyGroupsDTOBean.exec(studyGroupDAOS);

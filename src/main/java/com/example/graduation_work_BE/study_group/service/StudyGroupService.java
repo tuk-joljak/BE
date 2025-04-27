@@ -41,8 +41,8 @@ public class StudyGroupService {
 
 
     // 전체 스터디그룹 조회
-    public List<ResponseStudyGroupGetDTO> getStudyGroups(UUID studyGroupId){
-        return getStudyGroupsBean.exec(studyGroupId);
+    public List<ResponseStudyGroupGetDTO> getStudyGroups(){
+        return getStudyGroupsBean.exec();
     }
 
 

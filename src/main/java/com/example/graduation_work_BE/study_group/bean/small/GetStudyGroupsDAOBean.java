@@ -18,7 +18,7 @@ public class GetStudyGroupsDAOBean {
         this.studyGroupRepositoryJPA = studyGroupRepositoryJPA;
     }
 
-    public List<StudyGroupDAO> exec(UUID studyGroupId){
+    public List<StudyGroupDAO> exec(){
         return studyGroupRepositoryJPA.findAll();
     }
 }
