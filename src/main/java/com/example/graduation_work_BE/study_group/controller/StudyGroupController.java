@@ -2,6 +2,7 @@ package com.example.graduation_work_BE.study_group.controller;
 
 import com.example.graduation_work_BE.study_group.entity.DTO.*;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +13,13 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("study/group")
+@RequestMapping("/study/group")
 @CrossOrigin("*")
 public class StudyGroupController {
 
     StudyGroupService studyGroupService;
 
+    @Autowired
     public StudyGroupController(StudyGroupService studyGroupService) {
         this.studyGroupService = studyGroupService;
     }
@@ -107,60 +109,5 @@ public class StudyGroupController {
         return ResponseEntity.status(HttpStatus.OK).body(requestMap);
 
     }
-
-    // 스터디그룹 참여자 조회
-    @GetMapping("/all/participant")
-    public ResponseEntity<Map<String, Object>> getStudyParticipant() {
-
-        List<ResponseStudyParticipantGetDTO> responseStudyParticipantGetDTO = studyGroupService.getStudyParticipant();
-
-        boolean success = (responseStudyParticipantGetDTO == null) ? false : true;
-
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("success", success);
-        requestMap.put("message", success ? "스터디그룹원 조회 성공" : "스터디그룹원 조회 실패");
-        requestMap.put("studyParticipantList", responseStudyParticipantGetDTO);
-
-        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
-    }
-
-    // 스터디그룹 참여자 생성
-    @PostMapping
-    public ResponseEntity<Map<String, Object>> saveStudyParticipant(@RequestBody RequestStudyParticipantSaveDTO requestStudyParticipantSaveDTO) {
-
-        UUID userId = studyGroupService.saveStudyParticipant(requestStudyParticipantSaveDTO);
-
-        boolean success = (userId == null) ? false : true;
-
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("success", success);
-        requestMap.put("message", success ? "스터디그룹원 추가 성공" : "스터디그룹원 추가 실패");
-        requestMap.put("userId", userId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
-    }
-
-
-    // 스터디그룹 참여자 삭제
-    @DeleteMapping
-    public ResponseEntity<Map<String, Object>> deleteStudyParticipant(@RequestBody RequestStudyParticipantDeleteDTO requestStudyParticipantDeleteDTO){
-
-        UUID userId = studyGroupService.deleteStudyParticipant(requestStudyParticipantDeleteDTO);
-
-        boolean success = (userId == null) ? false : true;
-
-        Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put("success", success);
-        requestMap.put("message", success ? "스터디그룹원 삭제 성공" : "스터디그룹원 삭제 실패");
-        requestMap.put("userId", userId);
-
-        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
-
-    }
-
-
-
-
-
 
 }

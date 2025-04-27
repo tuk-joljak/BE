@@ -10,12 +10,6 @@ import java.util.List;
 
 @Component
 public class CreateStudyParticipantDTOBean {
-    CreateStudyParticipantDTOBean createStudyParticipantDTOBean;
-
-    @Autowired
-    public CreateStudyParticipantDTOBean(CreateStudyParticipantDTOBean createStudyParticipantDTOBean){
-        this.createStudyParticipantDTOBean = createStudyParticipantDTOBean;
-    }
 
     public List<ResponseStudyParticipantGetDTO> exec(List<StudyParticipantDAO> studyParticipantDAOS){
 
@@ -26,7 +20,7 @@ public class CreateStudyParticipantDTOBean {
         for (StudyParticipantDAO studyParticipantDAO : studyParticipantDAOS){
 
             // 스터디그룹원 DTO 생성
-            ResponseStudyParticipantGetDTO responseStudyParticipantGetDTO = createStudyParticipantDTOBean.exec(studyParticipantDAO);
+            ResponseStudyParticipantGetDTO responseStudyParticipantGetDTO = exec(studyParticipantDAO);
 
             // 생성한 DTO를 DTO 리스트에 넣기
             responseStudyParticipantGetDTOS.add(responseStudyParticipantGetDTO);

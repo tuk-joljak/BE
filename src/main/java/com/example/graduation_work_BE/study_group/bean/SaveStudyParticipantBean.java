@@ -29,6 +29,6 @@ public class SaveStudyParticipantBean {
         saveStudyParticipantDAOBean.exec(studyParticipantDAO);
 
         // 넣은 DAO값의 PK값을 반환
-        return studyParticipantDAO.getStudyGroupId();
+        return studyParticipantDAO.getStudyParticipantId();
     }
 }

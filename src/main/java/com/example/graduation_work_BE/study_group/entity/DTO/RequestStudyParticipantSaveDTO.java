@@ -8,7 +8,6 @@ import java.util.UUID;
 @Data
 @Builder
 public class RequestStudyParticipantSaveDTO {
-    UUID studyParticipantId;
     UUID userId;
     UUID studyGroupId;
 

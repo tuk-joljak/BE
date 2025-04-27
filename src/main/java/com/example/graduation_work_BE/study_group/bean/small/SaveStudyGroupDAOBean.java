@@ -2,6 +2,7 @@ package com.example.graduation_work_BE.study_group.bean.small;
 
 import com.example.graduation_work_BE.study_group.entity.StudyGroupDAO;
 import com.example.graduation_work_BE.study_group.repository.StudyGroupRepositoryJPA;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,6 +10,7 @@ public class SaveStudyGroupDAOBean  {
 
     StudyGroupRepositoryJPA studyGroupRepositoryJPA;
 
+    @Autowired
     public SaveStudyGroupDAOBean(StudyGroupRepositoryJPA studyGroupRepositoryJPA) {
         this.studyGroupRepositoryJPA = studyGroupRepositoryJPA;
     }
