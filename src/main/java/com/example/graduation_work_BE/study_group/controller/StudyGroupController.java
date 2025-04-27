@@ -125,6 +125,20 @@ public class StudyGroupController {
     }
 
     // 스터디그룹 참여자 생성
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> saveStudyParticipant(@RequestBody RequestStudyParticipantSaveDTO requestStudyParticipantSaveDTO) {
+
+        UUID userId = studyGroupService.saveStudyParticipant(requestStudyParticipantSaveDTO);
+
+        boolean success = (userId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "스터디그룹원 추가 성공" : "스터디그룹원 추가 실패");
+        requestMap.put("userId", userId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
 
     // 스터디그룹 참여자 삭제
