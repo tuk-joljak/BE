@@ -10,9 +10,10 @@ public class CreateStudyGroupDTOBean {
     public ResponseStudyGroupGetDTO exec(StudyGroupDAO studyGroupDAO){
         return ResponseStudyGroupGetDTO.builder()
                 .studyGroupName(studyGroupDAO.getStudyGroupName())
-                .content(studyGroupDAO.getContent())
+                .description(studyGroupDAO.getDescription())
                 .startDate(studyGroupDAO.getStartDate())
                 .endDate(studyGroupDAO.getEndDate())
+                .isRecruiting(studyGroupDAO.getIsRecruiting())
                 .build();
     }
 }

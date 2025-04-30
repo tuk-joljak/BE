@@ -6,11 +6,13 @@ import com.example.graduation_work_BE.openai.service.OpenAiService;
 import com.example.graduation_work_BE.job_posting.domain.JobPostingDAO;
 import com.example.graduation_work_BE.job_posting.service.JobPostingService;
 import com.example.graduation_work_BE.resume.entity.ResumeDAO;
+import com.example.graduation_work_BE.resume.entity.ResumePdfDAO;
 import com.example.graduation_work_BE.resume.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +25,20 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/openai")
-@RequiredArgsConstructor
 @Slf4j
 @CrossOrigin("*")
 public class OpenAiController {
 
-    private final OpenAiService openAiService;
-    private final JobPostingService jobPostingService;
-    private final ResumeService resumeService;
+    OpenAiService openAiService;
+    JobPostingService jobPostingService;
+    ResumeService resumeService;
+
+    @Autowired
+    public OpenAiController(OpenAiService openAiService, JobPostingService jobPostingService, ResumeService resumeService) {
+        this.openAiService = openAiService;
+        this.jobPostingService = jobPostingService;
+        this.resumeService = resumeService;
+    }
 
     @PostMapping("/chat")
     public Mono<ResponseEntity<OpenAiResponseDTO>> chatWithOpenAi(@RequestBody OpenAiRequestDTO openAiRequestDTO) {
@@ -47,6 +55,8 @@ public class OpenAiController {
         return Mono.fromCallable(() -> extractTextFromPdf(resumeFile))
                 .flatMap(resumeText -> {
                     List<String> resumeSkills = extractSkillsFromResume(resumeText);
+
+                    ResumePdfDAO resumePdfDAO = resumeService.saveResumePdf(resumeFile.getOriginalFilename(), resumeText, resumeSkills, null);
                     List<JobPostingDAO> jobPostings = jobPostingService.getRecommendedJobPostings(resumeSkills);
                     Map<String, List<String>> skillComparison = compareSkills(resumeSkills, jobPostings);
 
@@ -54,6 +64,8 @@ public class OpenAiController {
 
                     return openAiService.sendChatCompletionWithPrompt(prompt)
                             .map(aiResponse -> {
+                                resumeService.saveResumeFeedbackByPdf(resumePdfDAO, skillComparison.get("commonSkills"), skillComparison.get("missingSkills"), aiResponse.getResponses());
+
                                 Map<String, Object> response = new HashMap<>();
                                 response.put("commonSkills", skillComparison.get("commonSkills"));
                                 response.put("missingSkills", skillComparison.get("missingSkills"));
@@ -99,6 +111,8 @@ public class OpenAiController {
 
                     return openAiService.sendChatCompletionWithPrompt(prompt)
                             .map(aiResponse -> {
+                                resumeService.saveResumeFeedback(resumeDAO, skillComparison.get("commonSkills"), skillComparison.get("missingSkills"), aiResponse.getResponses());
+
                                 Map<String, Object> response = new HashMap<>();
                                 response.put("commonSkills", skillComparison.get("commonSkills"));
                                 response.put("missingSkills", skillComparison.get("missingSkills"));

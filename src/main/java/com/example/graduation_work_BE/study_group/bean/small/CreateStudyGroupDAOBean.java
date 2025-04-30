@@ -15,10 +15,11 @@ public class CreateStudyGroupDAOBean {
                 .studyGroupId(UUID.randomUUID())
                 .userId(requestStudyGroupSaveDTO.getUserId())
                 .studyGroupName(requestStudyGroupSaveDTO.getStudyGroupName())
-                .category(requestStudyGroupSaveDTO.getCategory())
-                .content(requestStudyGroupSaveDTO.getContent())
+                .techStacks(requestStudyGroupSaveDTO.getTechStacks())
+                .description(requestStudyGroupSaveDTO.getDescription())
                 .startDate(requestStudyGroupSaveDTO.getStartDate())
                 .endDate(requestStudyGroupSaveDTO.getEndDate())
+                .isRecruiting(true)
                 .createAt(LocalDateTime.now())
                 .updateAt(LocalDateTime.now())
                 .build();

@@ -1,10 +1,10 @@
 package com.example.graduation_work_BE.study_group.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,10 +20,16 @@ public class StudyGroupDAO {
     UUID userId;  // 만든사람
 
     String studyGroupName;
-    String category; // 임시
-    String content;  // 스터디 개요
+    @ElementCollection
+    @CollectionTable(name = "study_group_tech_stack", joinColumns = @JoinColumn(name = "study_group_id"))
+    @Column(name = "tech_stack")
+    List<String> techStacks; // 임시
+
+    String description;  // 스터디 개요
     String startDate;
     String endDate;
+
+    Boolean isRecruiting;
 
     LocalDateTime createAt;
     LocalDateTime updateAt;

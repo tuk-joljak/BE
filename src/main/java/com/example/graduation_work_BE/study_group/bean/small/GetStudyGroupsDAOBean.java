@@ -21,4 +21,8 @@ public class GetStudyGroupsDAOBean {
     public List<StudyGroupDAO> exec(){
         return studyGroupRepositoryJPA.findAll();
     }
+
+    public List<StudyGroupDAO> exec(List<String> techStacks){
+        return studyGroupRepositoryJPA.findByTechStacksInAndIsRecruitingTrue(techStacks);
+    }
 }

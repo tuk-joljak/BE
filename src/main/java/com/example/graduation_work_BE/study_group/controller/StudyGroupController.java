@@ -1,6 +1,7 @@
 package com.example.graduation_work_BE.study_group.controller;
 
 import com.example.graduation_work_BE.study_group.entity.DTO.*;
+import com.example.graduation_work_BE.study_group.entity.StudyGroupDAO;
 import com.example.graduation_work_BE.study_group.service.StudyGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,21 @@ public class StudyGroupController {
     }
 
 
+    // 미싱 스킬에 따른 스터디그룹 조회
+    @PostMapping("missing/skills")
+    public ResponseEntity<Map<String, Object>> getStudyGroupsByMissingSkills(@RequestBody RequestRecommendStudyGroupGetDTO requestRecommendStudyGroupGetDTO) {
+
+        List<ResponseRecommendStudyGroupGetDTO> responseRecommendStudyGroupGetDTOS = studyGroupService.getRecommendStudyGroupBySkills(requestRecommendStudyGroupGetDTO.getMissingSkills());
+
+        boolean success = (responseRecommendStudyGroupGetDTOS.isEmpty()) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "추천 스터디 조회 성공" : "추천 스터디 조회 실패");
+        requestMap.put("studyGroupList", responseRecommendStudyGroupGetDTOS);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
 
     // 스터디그룹 생성

@@ -27,9 +27,10 @@ public class UpdateStudyGroupBean {
         StudyGroupDAO studyGroupDAO = getStudyGroupDAOBean.exec(requestStudyGroupUpdateDTO.getStudyGroupId());
         if (studyGroupDAO==null) return null;
 
-        studyGroupDAO.setContent(requestStudyGroupUpdateDTO.getContent());
+        studyGroupDAO.setDescription(requestStudyGroupUpdateDTO.getDescription());
         studyGroupDAO.setStartDate(requestStudyGroupUpdateDTO.getStartDate());
         studyGroupDAO.setEndDate(requestStudyGroupUpdateDTO.getEndDate());
+        studyGroupDAO.setIsRecruiting(requestStudyGroupUpdateDTO.getIsRecruiting());
         studyGroupDAO.setUpdateAt(LocalDateTime.now());
 
         saveStudyGroupDAOBean.exec(studyGroupDAO);

@@ -7,8 +7,8 @@ import lombok.Data;
 @Builder
 public class ResponseStudyGroupGetDTO {
     String studyGroupName;
-    String content;
+    String description;
     String startDate;
     String endDate;
-
+    Boolean isRecruiting;
 }

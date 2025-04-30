@@ -2,6 +2,8 @@ package com.example.graduation_work_BE.study_group.service;
 
 import com.example.graduation_work_BE.study_group.bean.*;
 import com.example.graduation_work_BE.study_group.entity.DTO.*;
+import com.example.graduation_work_BE.study_group.entity.StudyGroupDAO;
+import com.example.graduation_work_BE.study_group.repository.StudyGroupRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +19,16 @@ public class StudyGroupService {
     SaveStudyGroupBean saveStudyGroupBean; // 스터디그룹 생성
     UpdateStudyGroupBean updateStudyGroupBean; // 스터디그룹 수정
     DeleteStudyGroupBean deleteStudyGroupBean; // 스터디그룹 삭제
+    GetRecommendStudyGroupBean getRecommendStudyGroupBean;
 
     @Autowired
-    public StudyGroupService(GetStudyGroupBean getStudyGroupBean, GetStudyGroupsBean getStudyGroupsBean, SaveStudyGroupBean saveStudyGroupBean, UpdateStudyGroupBean updateStudyGroupBean, DeleteStudyGroupBean deleteStudyGroupBean){
+    public StudyGroupService(GetStudyGroupBean getStudyGroupBean, GetStudyGroupsBean getStudyGroupsBean, SaveStudyGroupBean saveStudyGroupBean, UpdateStudyGroupBean updateStudyGroupBean, DeleteStudyGroupBean deleteStudyGroupBean, GetRecommendStudyGroupBean getRecommendStudyGroupBean){
         this.getStudyGroupBean = getStudyGroupBean;
         this.getStudyGroupsBean = getStudyGroupsBean;
         this.saveStudyGroupBean = saveStudyGroupBean;
         this.updateStudyGroupBean = updateStudyGroupBean;
         this.deleteStudyGroupBean = deleteStudyGroupBean;
+        this.getRecommendStudyGroupBean = getRecommendStudyGroupBean;
     }
 
     // 특정 스터디그룹 조회
@@ -41,6 +45,10 @@ public class StudyGroupService {
     }
 
 
+    // 추천 스터디그룹 조회
+    public List<ResponseRecommendStudyGroupGetDTO> getRecommendStudyGroupBySkills(List<String> missingSkills){
+        return getRecommendStudyGroupBean.exec(missingSkills);
+    }
 
 
     // 스터디그룹 저장
