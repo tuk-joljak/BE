@@ -64,7 +64,7 @@ public class StudyGroupController {
 
         List<ResponseRecommendStudyGroupGetDTO> responseRecommendStudyGroupGetDTOS = studyGroupService.getRecommendStudyGroupBySkills(requestRecommendStudyGroupGetDTO.getMissingSkills());
 
-        boolean success = (responseRecommendStudyGroupGetDTOS.isEmpty()) ? false : true;
+        boolean success = responseRecommendStudyGroupGetDTOS != null && !responseRecommendStudyGroupGetDTOS.isEmpty();
 
         Map<String, Object> requestMap = new HashMap<>();
         requestMap.put("success", success);
