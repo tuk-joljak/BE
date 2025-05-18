@@ -89,10 +89,11 @@ jobs:
           # -d : Docker Hub 에서 가져온 이미지를 백그라운드에서 실행
           script: |
             echo "Running new container..."
-            sudo docker run -p 8080:${{ secrets.PORT }} --name ${{ secrets.PROJECT_NAME }} \
-              -e DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}" \
-              -e PROJECT_NAME="${{ secrets.PROJECT_NAME }}" \
-              -e DB_URL="${{ secrets.DB_URL }}" \
-              -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
-              -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-              -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+            sudo docker run -p 8080:${{ secrets.PORT }} \
+            --name ${{ secrets.PROJECT_NAME }} \
+            -e DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}" \
+            -e PROJECT_NAME="${{ secrets.PROJECT_NAME }}" \
+            -e DB_URL="${{ secrets.DB_URL }}" \
+            -e DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+            -e DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+            -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
