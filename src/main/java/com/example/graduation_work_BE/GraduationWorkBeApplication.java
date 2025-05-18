@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class GraduationWorkBeApplication {
 
 	public static void main(String[] args) {
-		System.out.println("hi ci/cd test");
+		System.out.println("hi ci/cd test 이제 좀 됐으면 좋겠다");
 		SpringApplication.run(GraduationWorkBeApplication.class, args);
 	}
 
