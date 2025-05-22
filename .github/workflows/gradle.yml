@@ -30,6 +30,9 @@ jobs:
       - name: Build with Gradle Build
         run: ./gradlew build -x test
 
+      - name: injection-application.yml
+        run: echo -E "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+
       - name: DockerHub Login
         uses: docker/login-action@v2
         with:
