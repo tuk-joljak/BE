@@ -1,9 +1,7 @@
 package com.example.graduation_work_BE.user_target.service;
 
-import com.example.graduation_work_BE.user_target.bean.GetUserTargetBean;
-import com.example.graduation_work_BE.user_target.bean.GetUserTargetsBean;
-import com.example.graduation_work_BE.user_target.bean.SaveUserTargetBean;
-import com.example.graduation_work_BE.user_target.bean.UpdateUserTargetBean;
+import com.example.graduation_work_BE.user_target.bean.*;
+import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetDeleteDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetSaveDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetUpdateDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.ResponseUserTargetGetDTO;
@@ -20,13 +18,15 @@ public class UserTargetService {
     GetUserTargetsBean getUserTargetsBean;
     SaveUserTargetBean saveUserTargetBean;
     UpdateUserTargetBean updateUserTargetBean;
+    DeleteUserTargetBean deleteUserTargetBean;
 
     @Autowired
-    public UserTargetService(GetUserTargetBean getUserTargetBean, GetUserTargetsBean getUserTargetsBean, SaveUserTargetBean saveUserTargetBean, UpdateUserTargetBean updateUserTargetBean){
+    public UserTargetService(GetUserTargetBean getUserTargetBean, GetUserTargetsBean getUserTargetsBean, SaveUserTargetBean saveUserTargetBean, UpdateUserTargetBean updateUserTargetBean, DeleteUserTargetBean deleteUserTargetBean){
         this.getUserTargetBean = getUserTargetBean;
         this.getUserTargetsBean = getUserTargetsBean;
         this.saveUserTargetBean = saveUserTargetBean;
         this.updateUserTargetBean = updateUserTargetBean;
+        this.deleteUserTargetBean = deleteUserTargetBean;
     }
 
     // 특정 목표 조회
@@ -50,5 +50,8 @@ public class UserTargetService {
 
 
     // 목표 삭제
+    public UUID deleteUserTarget(RequestUserTargetDeleteDTO requestUserTargetDeleteDTO){
+        return deleteUserTargetBean.exec(requestUserTargetDeleteDTO);
+    }
 
 }

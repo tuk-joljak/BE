@@ -1,6 +1,6 @@
 package com.example.graduation_work_BE.user_target.controller;
 
-import com.example.graduation_work_BE.user_schedule.entity.DTO.RequestUserScheduleUpdateDTO;
+import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetDeleteDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetSaveDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetUpdateDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.ResponseUserTargetGetDTO;
@@ -90,5 +90,21 @@ public class UserTargetController {
     }
 
     // 목표 삭제
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteUserTarget(@RequestBody RequestUserTargetDeleteDTO requestUserTargetDeleteDTO){
+
+        UUID userTargetId = userTargetService.deleteUserTarget(requestUserTargetDeleteDTO);
+
+        boolean success = (userTargetId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "목표 삭제 성공" : "목표 삭제 실패");
+        requestMap.put("userTargetId", userTargetId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+
+    }
+
 
 }
