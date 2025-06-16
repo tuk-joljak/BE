@@ -1,6 +1,8 @@
 package com.example.graduation_work_BE.user_target.controller;
 
+import com.example.graduation_work_BE.user_schedule.entity.DTO.RequestUserScheduleUpdateDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetSaveDTO;
+import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetUpdateDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.ResponseUserTargetGetDTO;
 import com.example.graduation_work_BE.user_target.service.UserTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,20 @@ public class UserTargetController {
     }
 
     // 목표 수정
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateUserTarget(@RequestBody RequestUserTargetUpdateDTO requestUserTargetUpdateDTO) {
+
+        UUID userTargetId = userTargetService.updateUserTarget(requestUserTargetUpdateDTO);
+
+        boolean success = (userTargetId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "목표 수정 성공" : "목표 수정 실패");
+        requestMap.put("userTargetId", userTargetId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
     // 목표 삭제
 
