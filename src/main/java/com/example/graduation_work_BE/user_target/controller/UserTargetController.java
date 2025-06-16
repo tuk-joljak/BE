@@ -1,6 +1,6 @@
 package com.example.graduation_work_BE.user_target.controller;
 
-import com.example.graduation_work_BE.user_schedule.entity.DTO.ResponseUserScheduleGetDTO;
+import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetSaveDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.ResponseUserTargetGetDTO;
 import com.example.graduation_work_BE.user_target.service.UserTargetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +56,20 @@ public class UserTargetController {
     }
 
     // 목표 저장
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> saveUserTarget(@RequestBody RequestUserTargetSaveDTO requestUserTargetSaveDTO) {
+
+        UUID userTargetId = userTargetService.saveUserTarget(requestUserTargetSaveDTO);
+
+        boolean success = (userTargetId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "목표 저장 성공" : "목표 저장 실패");
+        requestMap.put("userTargetId", userTargetId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
     // 목표 수정
 
