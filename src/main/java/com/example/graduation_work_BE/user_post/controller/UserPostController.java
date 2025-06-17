@@ -40,6 +40,20 @@ public class UserPostController {
     }
 
     // 전체 게시물 조회
+    @GetMapping("/all/{userId}")
+    public ResponseEntity<Map<String, Object>> getUserPosts(@PathVariable("userId") UUID userId) {
+
+        List<ResponseUserPostGetDTO> responseUserPostsGetDTO = userPostService.getUserPosts(userId);
+
+        boolean success = (responseUserPostsGetDTO == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "전체 게시물 조회 성공" : "전체 게시물 조회 실패");
+        requestMap.put("userPostList", responseUserPostsGetDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
 
     // 게시물 저장
