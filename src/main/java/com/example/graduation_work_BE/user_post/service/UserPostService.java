@@ -2,8 +2,9 @@ package com.example.graduation_work_BE.user_post.service;
 
 import com.example.graduation_work_BE.user_post.bean.GetUserPostBean;
 import com.example.graduation_work_BE.user_post.bean.GetUserPostsBean;
+import com.example.graduation_work_BE.user_post.bean.SaveUserPostBean;
+import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostSaveDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.ResponseUserPostGetDTO;
-import com.example.graduation_work_BE.user_target.bean.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +16,13 @@ public class UserPostService {
 
     GetUserPostBean getUserPostBean;
     GetUserPostsBean getUserPostsBean;
+    SaveUserPostBean saveUserPostBean;
 
     @Autowired
-    public UserPostService(GetUserPostBean getUserPostBean, GetUserPostsBean getUserPostsBean){
+    public UserPostService(GetUserPostBean getUserPostBean, GetUserPostsBean getUserPostsBean, SaveUserPostBean saveUserPostBean){
         this.getUserPostBean = getUserPostBean;
         this.getUserPostsBean = getUserPostsBean;
+        this.saveUserPostBean = saveUserPostBean;
 
     }
 
@@ -34,9 +37,10 @@ public class UserPostService {
     }
 
 
-
     // 게시물 저장
-
+    public UUID saveUserPost(RequestUserPostSaveDTO requestUserPostSaveDTO){
+        return saveUserPostBean.exec(requestUserPostSaveDTO);
+    }
 
     // 게시물 수정
 
