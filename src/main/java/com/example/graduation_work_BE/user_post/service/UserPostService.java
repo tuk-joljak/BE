@@ -1,9 +1,7 @@
 package com.example.graduation_work_BE.user_post.service;
 
-import com.example.graduation_work_BE.user_post.bean.GetUserPostBean;
-import com.example.graduation_work_BE.user_post.bean.GetUserPostsBean;
-import com.example.graduation_work_BE.user_post.bean.SaveUserPostBean;
-import com.example.graduation_work_BE.user_post.bean.UpdateUserPostBean;
+import com.example.graduation_work_BE.user_post.bean.*;
+import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostDeleteDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostSaveDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostUpdateDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.ResponseUserPostGetDTO;
@@ -20,13 +18,15 @@ public class UserPostService {
     GetUserPostsBean getUserPostsBean;
     SaveUserPostBean saveUserPostBean;
     UpdateUserPostBean updateUserPostBean;
+    DeleteUserPostBean deleteUserPostBean;
 
     @Autowired
-    public UserPostService(GetUserPostBean getUserPostBean, GetUserPostsBean getUserPostsBean, SaveUserPostBean saveUserPostBean, UpdateUserPostBean updateUserPostBean){
+    public UserPostService(GetUserPostBean getUserPostBean, GetUserPostsBean getUserPostsBean, SaveUserPostBean saveUserPostBean, UpdateUserPostBean updateUserPostBean, DeleteUserPostBean deleteUserPostBean){
         this.getUserPostBean = getUserPostBean;
         this.getUserPostsBean = getUserPostsBean;
         this.saveUserPostBean = saveUserPostBean;
         this.updateUserPostBean = updateUserPostBean;
+        this.deleteUserPostBean = deleteUserPostBean;
 
     }
 
@@ -53,6 +53,9 @@ public class UserPostService {
 
 
     // 게시물 삭제
+    public UUID deleteUserPost(RequestUserPostDeleteDTO requestUserPostDeleteDTO){
+        return deleteUserPostBean.exec(requestUserPostDeleteDTO);
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.graduation_work_BE.user_post.controller;
 
+import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostDeleteDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostSaveDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostUpdateDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.ResponseUserPostGetDTO;
@@ -92,6 +93,21 @@ public class UserPostController {
     }
 
     // 게시물 삭제
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteUserPost(@RequestBody RequestUserPostDeleteDTO requestUserPostDeleteDTO){
+
+        UUID userPostId = userPostService.deleteUserPost(requestUserPostDeleteDTO);
+
+        boolean success = (userPostId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "게시물 삭제 성공" : "게시물 삭제 실패");
+        requestMap.put("userPostId", userPostId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+
+    }
 
 
 
