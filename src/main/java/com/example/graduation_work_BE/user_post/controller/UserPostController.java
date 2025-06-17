@@ -1,6 +1,7 @@
 package com.example.graduation_work_BE.user_post.controller;
 
 import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostSaveDTO;
+import com.example.graduation_work_BE.user_post.entity.DTO.RequestUserPostUpdateDTO;
 import com.example.graduation_work_BE.user_post.entity.DTO.ResponseUserPostGetDTO;
 import com.example.graduation_work_BE.user_post.service.UserPostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,20 @@ public class UserPostController {
 
 
     // 게시물 수정
+    @PutMapping
+    public ResponseEntity<Map<String, Object>> updateUserPost(@RequestBody RequestUserPostUpdateDTO requestUserPostUpdateDTO) {
 
+        UUID userPostId = userPostService.updateUserPost(requestUserPostUpdateDTO);
+
+        boolean success = (userPostId == null) ? false : true;
+
+        Map<String, Object> requestMap = new HashMap<>();
+        requestMap.put("success", success);
+        requestMap.put("message", success ? "게시물 수정 성공" : "게시물 수정 실패");
+        requestMap.put("userPostId", userPostId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(requestMap);
+    }
 
     // 게시물 삭제
 
