@@ -23,6 +23,9 @@ public class UserTargetDAO {
 
     Boolean isFinish;
 
+    String startTime;
+    String endTime;
+
     LocalDateTime createAt;
     LocalDateTime uploadAt;
 }

@@ -9,4 +9,6 @@ public class RequestUserTargetUpdateDTO {
     UUID userTargetId;
 
     String targetContent;
+    String startTime;
+    String endTime;
 }

@@ -15,6 +15,8 @@ public class CreateUserTargetDAOBean {
                 .userTargetId(UUID.randomUUID())
                 .userId(requestUserTargetSaveDTO.getUserId())
                 .targetContent(requestUserTargetSaveDTO.getTargetContent())
+                .startTime(requestUserTargetSaveDTO.getStartTime())
+                .endTime(requestUserTargetSaveDTO.getEndTime())
                 .isFinish(false)
                 .createAt(LocalDateTime.now())
                 .uploadAt(LocalDateTime.now())
