@@ -10,6 +10,8 @@ public class CreateUserTargetDTOBean {
     public ResponseUserTargetGetDTO exec(UserTargetDAO userTargetDAO){
         return ResponseUserTargetGetDTO.builder()
                 .targetContent(userTargetDAO.getTargetContent())
+                .startTime(userTargetDAO.getStartTime())
+                .endTime(userTargetDAO.getEndTime())
                 .isFinish(userTargetDAO.getIsFinish())
                 .build();
     }

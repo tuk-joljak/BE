@@ -7,7 +7,8 @@ import lombok.Data;
 @Builder
 public class ResponseUserTargetGetDTO {
     String targetContent;
+    String startTime;
+    String endTime;
 
     Boolean isFinish;
-
 }

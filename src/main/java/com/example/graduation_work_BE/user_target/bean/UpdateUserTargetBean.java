@@ -29,6 +29,8 @@ public class UpdateUserTargetBean {
 
         // 2. DAO 값을 수정한다
         userTargetDAO.setTargetContent(requestUserTargetUpdateDTO.getTargetContent());
+        userTargetDAO.setStartTime(requestUserTargetUpdateDTO.getStartTime());
+        userTargetDAO.setEndTime(requestUserTargetUpdateDTO.getEndTime());
         userTargetDAO.setUploadAt(LocalDateTime.now());
 
         // 3. DAO를 db에 저장한다

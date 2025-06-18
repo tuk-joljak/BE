@@ -12,5 +12,6 @@ public class RequestUserTargetSaveDTO {
     UUID userId;
 
     String targetContent;
-
+    String startTime;
+    String endTime;
 }
