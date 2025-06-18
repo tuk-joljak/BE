@@ -29,8 +29,8 @@ public class CommentController {
     }
 
     // 댓글 전체 조회
-    @GetMapping("/all")
-    public ResponseEntity<Map<String, Object>> getAllComment(@PathVariable("type") Type type, @PathVariable("id") UUID targetId){
+    @GetMapping("/all/{type}/{targetId}")
+    public ResponseEntity<Map<String, Object>> getAllComment(@PathVariable("type") Type type, @PathVariable("targetId") UUID targetId){
 
         List<ResponseCommentsGetDTO> responseCommentsGetDTOS = commentService.getComments(type, targetId);
 
