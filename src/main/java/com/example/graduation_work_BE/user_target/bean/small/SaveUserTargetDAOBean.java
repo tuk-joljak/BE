@@ -5,6 +5,8 @@ import com.example.graduation_work_BE.user_target.repository.UserTargetRepositor
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SaveUserTargetDAOBean {
 
@@ -17,5 +19,9 @@ public class SaveUserTargetDAOBean {
 
     public void exec(UserTargetDAO userTargetDAO){
         userTargetRepositoryJPA.save(userTargetDAO);
+    }
+
+    public void exec(List<UserTargetDAO> userTargetDAOS){
+        userTargetRepositoryJPA.saveAll(userTargetDAOS);
     }
 }

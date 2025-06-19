@@ -8,6 +8,7 @@ import com.example.graduation_work_BE.job_posting.service.JobPostingService;
 import com.example.graduation_work_BE.resume.entity.ResumeDAO;
 import com.example.graduation_work_BE.resume.entity.ResumePdfDAO;
 import com.example.graduation_work_BE.resume.service.ResumeService;
+import com.example.graduation_work_BE.user_target.service.UserTargetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,12 +33,14 @@ public class OpenAiController {
     OpenAiService openAiService;
     JobPostingService jobPostingService;
     ResumeService resumeService;
+    UserTargetService userTargetService;
 
     @Autowired
-    public OpenAiController(OpenAiService openAiService, JobPostingService jobPostingService, ResumeService resumeService) {
+    public OpenAiController(OpenAiService openAiService, JobPostingService jobPostingService, ResumeService resumeService, UserTargetService userTargetService) {
         this.openAiService = openAiService;
         this.jobPostingService = jobPostingService;
         this.resumeService = resumeService;
+        this.userTargetService = userTargetService;
     }
 
     @PostMapping("/chat")
@@ -122,6 +125,51 @@ public class OpenAiController {
                             });
                 });
     }
+
+    @PostMapping("/generate-target")
+    public Mono<ResponseEntity<Map<String, Object>>> generateTargetByMissingSkills(
+            @RequestBody Map<String, Object> request
+    ) {
+        UUID userId = UUID.fromString((String) request.get("userId"));
+        List<String> missingSkills = (List<String>) request.get("missingSkills");
+
+        String prompt = """
+        다음 기술들에 대해 각각 학습 목표를 작성해 주세요:
+
+        %s
+
+        각 기술마다 다음을 포함해 주세요:
+        1. 기술 이름 (숫자 순서)
+        2. 학습 목표 (간단히)
+        3. 학습 순서 (단계별로)
+
+        형식은 아래처럼 해주세요:
+
+        1. 기술명:
+         - 학습 목표: ...
+         - 학습 순서: ...
+
+        2. 기술명:
+         - 학습 목표: ...
+         - 학습 순서: ...
+        """.formatted(String.join(", ", missingSkills));
+
+
+        return openAiService.sendChatCompletionWithPrompt(prompt)
+                .flatMap(aiResponse -> {
+                    List<String> targets = aiResponse.getResponses(); // 응답은 하나의 문자열 리스트
+
+                    // 목표 저장 로직 호출
+                    userTargetService.saveTargetsFromAiResponse(userId, targets.get(0)); // 응답 하나만 저장
+
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("message", "목표 생성 및 저장 성공");
+                    response.put("rawTarget", targets.get(0));
+
+                    return Mono.just(ResponseEntity.ok(response));
+                });
+    }
+
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {
         try (PDDocument document = PDDocument.load(file.getInputStream())) {

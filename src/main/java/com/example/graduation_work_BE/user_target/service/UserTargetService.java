@@ -5,9 +5,11 @@ import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetDe
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetSaveDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.RequestUserTargetUpdateDTO;
 import com.example.graduation_work_BE.user_target.entity.DTO.ResponseUserTargetGetDTO;
+import com.example.graduation_work_BE.user_target.entity.UserTargetDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,14 +19,16 @@ public class UserTargetService {
     GetUserTargetBean getUserTargetBean;
     GetUserTargetsBean getUserTargetsBean;
     SaveUserTargetBean saveUserTargetBean;
+    SaveUserTargetByAiBean saveUserTargetByAiBean;
     UpdateUserTargetBean updateUserTargetBean;
     DeleteUserTargetBean deleteUserTargetBean;
 
     @Autowired
-    public UserTargetService(GetUserTargetBean getUserTargetBean, GetUserTargetsBean getUserTargetsBean, SaveUserTargetBean saveUserTargetBean, UpdateUserTargetBean updateUserTargetBean, DeleteUserTargetBean deleteUserTargetBean){
+    public UserTargetService(GetUserTargetBean getUserTargetBean, GetUserTargetsBean getUserTargetsBean, SaveUserTargetBean saveUserTargetBean, SaveUserTargetByAiBean saveUserTargetByAiBean, UpdateUserTargetBean updateUserTargetBean, DeleteUserTargetBean deleteUserTargetBean){
         this.getUserTargetBean = getUserTargetBean;
         this.getUserTargetsBean = getUserTargetsBean;
         this.saveUserTargetBean = saveUserTargetBean;
+        this.saveUserTargetByAiBean = saveUserTargetByAiBean;
         this.updateUserTargetBean = updateUserTargetBean;
         this.deleteUserTargetBean = deleteUserTargetBean;
     }
@@ -42,6 +46,12 @@ public class UserTargetService {
     public UUID saveUserTarget(RequestUserTargetSaveDTO requestUserTargetSaveDTO){
         return saveUserTargetBean.exec(requestUserTargetSaveDTO);
     }
+
+    // ai 목표 저장
+    public void saveTargetsFromAiResponse(UUID userId, String aiResponseText) {
+        saveUserTargetByAiBean.exec(userId, aiResponseText);
+    }
+
 
     // 목표 수정
     public UUID updateUserTarget(RequestUserTargetUpdateDTO requestUserTargetUpdateDTO){
