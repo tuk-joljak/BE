@@ -24,7 +24,7 @@ public class UserController {
 
     // 로그인
     @GetMapping("/login/oauth2/code/{registrationId}")
-    public ResponseEntity<Map<String, Object>> googleLogin(@RequestParam String code, @PathVariable String registrationId) {
+    public ResponseEntity<Map<String, Object>> googleLogin(@RequestParam("code") String code, @PathVariable String registrationId) {
 
         try {
             UUID userId = userService.socialLogin(code, registrationId);
