@@ -9,6 +9,7 @@ public class CreateUserPostDTOBean {
 
     public ResponseUserPostGetDTO exec(UserPostDAO userPostDAO){
         return ResponseUserPostGetDTO.builder()
+                .userPostId(userPostDAO.getUserPostId())
                 .postTitle(userPostDAO.getPostTitle())
                 .postContent(userPostDAO.getPostContent())
                 .isFinish(userPostDAO.getIsFinish())
