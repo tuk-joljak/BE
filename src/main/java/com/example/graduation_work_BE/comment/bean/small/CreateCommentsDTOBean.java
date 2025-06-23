@@ -14,6 +14,7 @@ public class CreateCommentsDTOBean {
 
     public ResponseCommentsGetDTO exec(CommentDAO commentDAO){
         return ResponseCommentsGetDTO.builder()
+                .commentId(commentDAO.getCommentId())
                 .userId(commentDAO.getUserId())
                 .content(commentDAO.getContent())
                 .build();

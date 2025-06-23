@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class ResponseCommentsGetDTO {
+    UUID commentId;
     UUID userId;
     String content;
 }
