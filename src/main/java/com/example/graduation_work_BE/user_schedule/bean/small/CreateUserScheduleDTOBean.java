@@ -9,6 +9,7 @@ public class CreateUserScheduleDTOBean {
 
     public ResponseUserScheduleGetDTO exec(UserScheduleDAO userScheduleDAO){
         return ResponseUserScheduleGetDTO.builder()
+                .userScheduleId(userScheduleDAO.getUserScheduleId())
                 .scheduleContent(userScheduleDAO.getScheduleContent())
                 .startDate(userScheduleDAO.getStartDate())
                 .endDate(userScheduleDAO.getEndDate())
