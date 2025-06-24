@@ -33,6 +33,7 @@ public class CreateStudyParticipantDTOBean {
     // StudyParticipantDAO 하나 → DTO 하나로
     public ResponseStudyParticipantGetDTO exec(StudyParticipantDAO studyParticipantDAO) {
         return ResponseStudyParticipantGetDTO.builder()
+                .studyParticipantId(studyParticipantDAO.getStudyParticipantId())
                 .userId(studyParticipantDAO.getUserId())
                 .build();
     }

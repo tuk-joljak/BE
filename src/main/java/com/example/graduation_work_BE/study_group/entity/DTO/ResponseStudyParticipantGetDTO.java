@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class ResponseStudyParticipantGetDTO {
+    UUID studyParticipantId;
     UUID userId;
 
 }
